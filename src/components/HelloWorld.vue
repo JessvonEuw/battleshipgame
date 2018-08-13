@@ -1,6 +1,7 @@
 <template>
   <div class="hello">
     <h1>{{ msg }}</h1>
+    {{ board }}
     <p>
       For guide and recipes on how to configure / customize this project,<br>
       check out the
@@ -31,11 +32,28 @@
 </template>
 
 <script>
+import { mapGetters, mapActions } from "vuex";
+
 export default {
   name: 'HelloWorld',
   props: {
     msg: String
-  }
+  },
+  mounted: function() {
+    this.setBoard("BOARD");
+  },
+  methods: Object.assign(
+    {},
+    mapActions('boards', {
+      setBoard: 'setBoard'
+    })
+  ),
+  computed: Object.assign(
+    {},
+    mapGetters('boards', {
+      board: 'getBoard'
+    })
+  )
 }
 </script>
 
