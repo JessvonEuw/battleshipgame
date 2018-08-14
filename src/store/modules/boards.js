@@ -2,40 +2,43 @@ import _ from "lodash";
 
 const state = {
   board: [],
+  opponentBoard: [],
   occupied: [],
-  ships: [1, 2, 3, 4],
-  boatSpaces: 4,
+  sunkShips: [],
   currentShip: {},
   collisionFlag: true,
-  shipInfo: [
+  hitCounter: 0,
+  missCounter: 0,
+  missIndex: 9,
+  ships: [
     {
       'name': 'L-Ship',
-      'color': 'purple',
       'index': 1,
+      'hitIndex': 5,
       'height': 3,
       'width': 2,
       'points': []
     },
     {
       'name': 'Dinghy',
-      'color': 'green',
       'index': 2,
+      'hitIndex': 6,
       'height': 2,
       'width': 2,
       'points': []
     },
     {
       'name': 'Carrier 1',
-      'color': 'yellow',
       'index': 3,
+      'hitIndex': 7,
       'height': 4,
       'width': 1,
       'points': []
     },
     {
       'name': 'Carrier 2',
-      'color': 'blue',
       'index': 4,
+      'hitIndex': 8,
       'height': 4,
       'width': 1,
       'points': []
@@ -45,9 +48,12 @@ const state = {
 }
 const getters = {
   getBoard: (state) => state.board,
+  getShips: (state) => state.ships,
   getOccupied: (state) => state.occupied
 }
-
+/* ---------------------- */ 
+/* Initial Ship Placement */ 
+/* ---------------------- */
 function boardCreate() {
   // create blank board
   var boardSize = 8,
@@ -74,8 +80,8 @@ function randomizeArr(arr) {
   return arr;
 }
 
-function placeShips() {
-  var shuffleShips = randomizeArr(state.shipInfo);
+function setShips() {
+  var shuffleShips = randomizeArr(state.ships);
 
   for(var i = 0; i < shuffleShips.length; i++) {
     state.currentShip = shuffleShips[i];
@@ -174,7 +180,7 @@ function shipPlacement(ship) {
 
 function traverseUp(point, end) {
   for(var row = point.row - 1; row > end; row--) {
-    // reassigning point row and col did not work b/c it is an observable
+    // each ship will keep track of its own information
     state.currentShip.points.push({'row': row, 'col': point.col});
   }
 }
@@ -195,13 +201,20 @@ function traverseRight(point, end) {
 }
 
 function checkOverlap() {
-  var match = {};
+  var match = {},
+      matchIndex = -1;
 
   for(var i in state.currentShip.points) {
     //check if any intended placement spots are already occupied
-    match = _.find(state.occupied, state.currentShip.points[i]);
 
-    if(match !== undefined || !_.isEmpty(match)) {
+    if (state.currentShip.points[i] !== undefined) {
+      console.log(state.currentShip.points[i]);
+      matchIndex = _.findIndex(state.occupied, state.currentShip.points[i]);
+    }
+    
+      if(matchIndex > -1) {
+      //var removed = _.remove(state.occupied, _.find(state.occupied, state.currentShip.points[i]));
+      //state.occupied.splice(matchIndex, 1);
       state.collisionFlag = true;
       state.currentShip.points = [];
     } else {
@@ -220,17 +233,47 @@ function shipOnBoard(ship) {
     state.board[ship.points[ind].row][ship.points[ind].col] = ship.index;
   }
 }
+/* ------------------- */ 
+/*   Attack Opponent   */ 
+/* ------------------- */
+
+function checkHit(coords) {
+  var matchIndex = 0;
+  
+  matchIndex = _.findIndex(state.occupied, coords);
+  if(matchIndex > -1) {
+    state.hitCounter++;
+    //state.board[state.ships[i].points[matchIndex].row].splice(state.ships[i].points[matchIndex].col, 1, state.ships[i].hitIndex);
+    state.board[coords.row].splice(coords.col, 1, 10);    
+  } else {
+    state.missCounter++;
+    state.board[coords.row].splice(coords.col, 1, state.missIndex);
+  }
+}
 
 const mutations = {
   setBoard: (state) => {
     randomizeArr(state.orientation);
-    state.board = boardCreate(); 
-    placeShips();
+    state.board = boardCreate();
+  },
+  setShips: (state) => {
+    setShips();
+  },
+  attackOpponent: (state, coords) => {
+    checkHit(coords);
   }
 }
 const actions = {
   setBoard: ({commit}) => {
     commit('setBoard');
+  },
+
+  setShips: ({commit}) => {
+    commit('setShips');
+  },
+
+  attackOpponent: ({commit}, coords) => {
+    commit('attackOpponent', coords);
   }
 }
 

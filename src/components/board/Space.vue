@@ -1,6 +1,10 @@
 <template>
   <div class="col" @click="handleFire">
-    <p class="cell"></p>
+    <p class="cell d-flex justify-content-center align-items-center">
+        {{point}}
+        <!-- <i v-if="point === 10" class="fas fa-2x fa-times"></i> -->
+
+    </p>
   </div>
 </template>
 <script>
@@ -17,16 +21,17 @@ import { mapGetters, mapActions } from "vuex";
   methods: Object.assign(
     {
       handleFire: function() {
-        //console.log("Row: " + this.row);
-        //console.log("Col: " + this.col);
+        this.attackOpponent({'row': this.row, 'col': this.col});
       }
     },
     mapActions('boards', {
+      attackOpponent: 'attackOpponent'
     })
   ),
   computed: Object.assign(
     {},
     mapGetters('boards', {
+      board: 'getBoard'
     })
   )
 }
