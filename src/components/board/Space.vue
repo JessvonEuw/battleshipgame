@@ -1,8 +1,7 @@
 <template>
   <div class="col" @click="handleFire">
     <p class="cell d-flex justify-content-center align-items-center">
-        {{point}}
-        <!-- <i v-if="point === 10" class="fas fa-2x fa-times"></i> -->
+        <i v-if="point === 10" class="fas fa-2x fa-times"></i>
 
     </p>
   </div>

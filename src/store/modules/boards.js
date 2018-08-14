@@ -15,6 +15,7 @@ const state = {
       'name': 'L-Ship',
       'index': 1,
       'hitIndex': 5,
+      'hitCount': 0,
       'height': 3,
       'width': 2,
       'points': []
@@ -23,6 +24,7 @@ const state = {
       'name': 'Dinghy',
       'index': 2,
       'hitIndex': 6,
+      'hitCount': 0,
       'height': 2,
       'width': 2,
       'points': []
@@ -31,6 +33,7 @@ const state = {
       'name': 'Carrier 1',
       'index': 3,
       'hitIndex': 7,
+      'hitCount': 0,
       'height': 4,
       'width': 1,
       'points': []
@@ -39,6 +42,7 @@ const state = {
       'name': 'Carrier 2',
       'index': 4,
       'hitIndex': 8,
+      'hitCount': 0,
       'height': 4,
       'width': 1,
       'points': []
@@ -207,14 +211,9 @@ function checkOverlap() {
   for(var i in state.currentShip.points) {
     //check if any intended placement spots are already occupied
 
-    if (state.currentShip.points[i] !== undefined) {
-      console.log(state.currentShip.points[i]);
-      matchIndex = _.findIndex(state.occupied, state.currentShip.points[i]);
-    }
+    matchIndex = _.findIndex(state.occupied, state.currentShip.points[i]);
     
-      if(matchIndex > -1) {
-      //var removed = _.remove(state.occupied, _.find(state.occupied, state.currentShip.points[i]));
-      //state.occupied.splice(matchIndex, 1);
+    if(matchIndex > -1) {
       state.collisionFlag = true;
       state.currentShip.points = [];
     } else {
@@ -226,7 +225,7 @@ function checkOverlap() {
   // only put ships on board if no collisions
   if(!state.collisionFlag)
     shipOnBoard(state.currentShip);
-}
+8}
 
 function shipOnBoard(ship) {
   for(var ind in ship.points) {
@@ -239,15 +238,34 @@ function shipOnBoard(ship) {
 
 function checkHit(coords) {
   var matchIndex = 0;
+  var hitFlag = false;
   
-  matchIndex = _.findIndex(state.occupied, coords);
-  if(matchIndex > -1) {
-    state.hitCounter++;
-    //state.board[state.ships[i].points[matchIndex].row].splice(state.ships[i].points[matchIndex].col, 1, state.ships[i].hitIndex);
-    state.board[coords.row].splice(coords.col, 1, 10);    
-  } else {
-    state.missCounter++;
-    state.board[coords.row].splice(coords.col, 1, state.missIndex);
+  for(var i in state.ships) {
+    matchIndex = _.findIndex(state.ships[i].points, coords);
+
+    if(matchIndex > -1) {
+      hitFlag = true;
+      hitCondition(state.ships[i], coords); 
+    } else {
+      if(hitFlag === false) {
+        state.missCounter++;
+        state.board[coords.row].splice(coords.col, 1, state.missIndex);
+      }
+    }
+  }
+}
+
+function hitCondition(ship, coords) {
+  var totalHits = 4;
+  state.hitCounter++;
+  ship.hitCount++;
+  state.board[coords.row].splice(coords.col, 1, 10);
+
+  if(ship.hitCount === totalHits) {
+    state.sunkShips.push(ship);
+  }
+  if(state.sunkShips.length === 4) {
+    //trigger win condition
   }
 }
 
