@@ -1,6 +1,6 @@
 <template>
   <div class="col" @click="handleFire">
-    <p class="cell"> {{ point }}</p>
+    <p class="cell"></p>
   </div>
 </template>
 <script>
