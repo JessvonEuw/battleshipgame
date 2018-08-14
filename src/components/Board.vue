@@ -8,7 +8,8 @@
         :key="cIndex"
         v-for="(col, cIndex) in row"
         :row="rIndex"
-        :col="cIndex">
+        :col="cIndex"
+        :point="col">
       </space>
     </div>
   </div>
@@ -35,7 +36,8 @@ export default {
   computed: Object.assign(
     {},
     mapGetters('boards', {
-      board: 'getBoard'
+      board: 'getBoard',
+      occupied: 'getOccupied'
     })
   )
 }

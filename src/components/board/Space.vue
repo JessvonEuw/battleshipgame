@@ -1,6 +1,6 @@
 <template>
   <div class="col" @click="handleFire">
-    <p class="cell"></p>
+    <p class="cell"> {{ point }}</p>
   </div>
 </template>
 <script>
@@ -9,15 +9,16 @@ import { mapGetters, mapActions } from "vuex";
   export default {
   props: {
     row: Number,
-    col: Number
+    col: Number,
+    point: Number
   },
   mounted () {
   },
   methods: Object.assign(
     {
       handleFire: function() {
-        console.log("Row: " + this.row);
-        console.log("Col: " + this.col);
+        //console.log("Row: " + this.row);
+        //console.log("Col: " + this.col);
       }
     },
     mapActions('boards', {
@@ -33,7 +34,7 @@ import { mapGetters, mapActions } from "vuex";
 
 <style scoped>
 .cell {
-  height: 40px;
+  height: 45px;
   margin: 0;
   border: 1px solid black;
 }
