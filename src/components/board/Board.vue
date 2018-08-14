@@ -3,7 +3,7 @@
     <div class="row justify-content-center align-items-center no-gutters" 
       :key="rIndex"
       v-for="(row, rIndex) in board">
-      <div class="col"> {{ rows[rIndex] }} </div>
+      <div class="col-1"> {{ rows[rIndex] }} </div>
       <space
         :key="cIndex"
         v-for="(col, cIndex) in row"
@@ -32,28 +32,22 @@ export default {
       rows: ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H']
     }
   },
+  props: {
+    board: Array
+  },
   mounted () {
-    this.setBoard();
-    this.setShips();
   },
   methods: Object.assign(
-    {
-      shipColor: function(shipIndex) {
-        if(shipIndex === 1)
-          return 1;
-        else if (shipIndex === 3)
-          return ;
-      }
-    },
+    {},
     mapActions('boards', {
-      setBoard: 'setBoard',
-      setShips: 'setShips'
+      //setBoard: 'setBoard',
+      //setShips: 'setShips'
     })
   ),
   computed: Object.assign(
     {},
     mapGetters('boards', {
-      board: 'getBoard',
+      //board: 'getBoard',
       ships: 'getShips',
       occupied: 'getOccupied'
     })

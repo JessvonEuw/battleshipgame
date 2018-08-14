@@ -30,7 +30,7 @@ import { mapGetters, mapActions } from "vuex";
   computed: Object.assign(
     {},
     mapGetters('boards', {
-      board: 'getBoard'
+      board: 'getPlayerBoard'
     })
   )
 }
