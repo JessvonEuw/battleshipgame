@@ -76,30 +76,101 @@ function placeShips() {
   // var shuffleShips = randomizeArr(state.shipInfo);
 
   //for(var i = 0; i < shuffleShips.length; i++) {
-    shipPlace(state.shipInfo[0]);
+    shipPlacement(state.shipInfo[0]);
   //}
 }
 
-function shipPlace(ship) {
+function shipPlacement(ship) {
   //var orientation = randomizeArr(state.orientation);
   var orientation = state.orientation[Math.floor(Math.random() * state.orientation.length)];
-  var boardSize = 7,
-      randRow = 0, 
-      randCol = 0,
-      point = 0;
 
-  if(orientation === 'up' || orientation === 'down') {
-    //vertical
-    randRow = Math.floor(Math.random() * (boardSize - ship.height)) + ship.height;
-    randCol = Math.floor(Math.random() * (boardSize - ship.width)) + ship.width;
-  } else {
-    //horizontal
-    randRow = Math.floor(Math.random() * (boardSize - ship.width)) + ship.width;
-    randCol = Math.floor(Math.random() * (boardSize - ship.height)) + ship.height;
+  var boardSize   = 7,
+      randRow     = 0, 
+      randCol     = 0,
+      point       = 0;
+
+  if(orientation === 'up') {
+    // range vert: ship.height to boardSize
+    // range horiz: 0 to (boardSize - ship.width)
+    randRow = Math.floor(Math.random() * (boardSize - ship.height + 1)) + ship.height;
+    randCol = Math.floor(Math.random() * ((boardSize - ship.width) + 1));
+  } else if(orientation === 'down') {
+    // range vert: 0 to (boardSize - ship.height)
+    // range horiz: ship.width to boardSize
+    randRow = Math.floor(Math.random() * ((boardSize - ship.height) + 1));
+    randCol = Math.floor(Math.random() * (boardSize - ship.width + 1)) + ship.width;
+  } else if (orientation === 'right') {
+    // range vert: 0 to (boardSize - ship.width)
+    // range horiz: 0 to (boardSize - ship.height)
+    randRow = Math.floor(Math.random() * (boardSize - ship.width) + 1);    
+    randCol = Math.floor(Math.random() * ((boardSize - ship.height)+ 1));
+  } else if(orientation === 'left') {
+    // range vert: ship.width to boardSize
+    // range horiz: ship.height to boardSize 
+    // randRow = Math.floor(Math.random() * (boardSize - ship.width)) + ship.width;
+    randRow = Math.floor(Math.random() * (boardSize - ship.width + 1)) + ship.width;    
+    randCol = Math.floor(Math.random() * (boardSize - ship.height + 1)) + ship.height;
   }
 
   point = { 'row': randRow, 'col': randCol};
   checkOrientation(ship, point, orientation);
+}
+
+function checkOrientation(ship, point, orientation) {
+  var minRowHeight = point.row - ship.height; // 3
+  var maxRowHeight = point.row + ship.height;
+  var maxRowWidth = point.row + ship.width;
+  var minRowWidth = point.row - ship.width;
+
+  var maxColHeight = point.col + ship.height;
+  var minColWidth = point.col - ship.width; // 2
+  var maxColWidth = point.col + ship.width;
+  var minColHeight = point.col - ship.height;
+
+
+  checkCollision(point);
+
+  if(orientation === 'up') {
+    console.log("Width: ", point.col + ship.width);
+    traverseUp(point, minRowHeight);
+    traverseRight(point, maxColWidth);
+  } 
+  if(orientation === 'down') {
+    traverseDown(point, maxRowHeight);
+    traverseLeft(point, minColWidth);
+  } 
+  if(orientation === 'right') {
+    traverseDown(point, maxRowWidth);
+    traverseRight(point, maxColHeight);
+  } 
+  else if(orientation === 'left') {
+    traverseUp(point, minRowWidth);
+    traverseLeft(point, minColHeight);
+  }
+
+  shipOnBoard(ship);
+}
+
+function traverseUp(point, end) {
+  for(var row = point.row - 1; row > end; row--) {
+    // reassigning point row and col did not work b/c it is an observable
+    checkCollision({'row': row, 'col': point.col});
+  }
+}
+function traverseDown(point, end) {
+  for(var row = point.row + 1; row < end; row++) {
+    checkCollision({'row': row, 'col': point.col});
+  }
+}
+function traverseLeft(point, end) {
+  for(var col = point.col - 1; col > end; col--) {
+    checkCollision({'row': point.row, 'col': col});
+  }
+}
+function traverseRight(point, end) {
+  for(var col = point.col + 1; col < end; col++) {
+    checkCollision({'row': point.row, 'col': col});
+  }
 }
 
 function checkCollision(point, orientation) {
@@ -114,25 +185,6 @@ function checkCollision(point, orientation) {
   } else {
     console.log("ship can't go here");
   }
-}
-
-function checkOrientation(ship, point, orientation) {
-  var maxShipRow = point.row - ship.height;
-  var maxShipCol = point.col + ship.width;
-
-  checkCollision(point);
-  //if(orientation === "up") {
-    for(var row = point.row - 1; row > maxShipRow; row--) {
-      // reassigning point row and col did not work b/c it is an observable
-      checkCollision({'row': row, 'col': point.col});
-    }
-
-    for(var col = point.col + 1; col < maxShipCol; col++) {
-      checkCollision({'row': point.row, 'col': col});
-    }
-  //}
-
-  shipOnBoard(ship);
 }
 
 function shipOnBoard(ship) {

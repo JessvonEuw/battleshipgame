@@ -34,7 +34,7 @@ import { mapGetters, mapActions } from "vuex";
 
 <style scoped>
 .cell {
-  height: 45px;
+  height: 55px;
   margin: 0;
   border: 1px solid black;
 }

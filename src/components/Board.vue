@@ -9,7 +9,8 @@
         v-for="(col, cIndex) in row"
         :row="rIndex"
         :col="cIndex"
-        :point="col">
+        :point="col"
+        :class="{ 'l-boat' : (shipColor(col) === 1) }">
       </space>
     </div>
   </div>
@@ -28,7 +29,12 @@ export default {
     this.setBoard();
   },
   methods: Object.assign(
-    {},
+    {
+      shipColor: function(shipIndex) {
+        if(shipIndex === 1)
+          return 1;
+      }
+    },
     mapActions('boards', {
       setBoard: 'setBoard'
     })
@@ -45,7 +51,7 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-table {
+.l-boat {
   background-color: red;
 }
 </style>
