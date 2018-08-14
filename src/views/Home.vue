@@ -1,7 +1,8 @@
 <template>
   <div class="container">
     <!-- <opponent-board></opponent-board> -->
-    <board></board>
+    <opponent-board></opponent-board>
+    <player-board></player-board>
   </div>
 </template>
 

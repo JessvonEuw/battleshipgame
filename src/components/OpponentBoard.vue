@@ -10,11 +10,14 @@
         :row="rIndex"
         :col="cIndex"
         :point="col"
+        class="simple-cell"
         :class="{ 
           'l-boat' : (col === 1), 
           'dinghy' : (col === 2), 
           'carrier1' : (col === 3), 
-          'carrier2' : (col === 4) }">
+          'carrier2' : (col === 4),
+          'miss' : (col === 9),
+          'hit' : (col === 10) }">
       </space>
     </div>
   </div>
@@ -31,6 +34,7 @@ export default {
   },
   mounted () {
     this.setBoard();
+    this.setShips();
   },
   methods: Object.assign(
     {
@@ -42,13 +46,15 @@ export default {
       }
     },
     mapActions('boards', {
-      setBoard: 'setBoard'
+      setBoard: 'setBoard',
+      setShips: 'setShips'
     })
   ),
   computed: Object.assign(
     {},
     mapGetters('boards', {
       board: 'getBoard',
+      ships: 'getShips',
       occupied: 'getOccupied'
     })
   )
@@ -57,19 +63,11 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-.l-boat {
-  background-color: #18314F;
-}
-
-.dinghy {
-  background-color: #820263;
-}
-
-.carrier1 {
-  background-color: #DB2B39;
-}
-
-.carrier2 {
-  background-color: #6DAEDB;
-}
+.simple-cell { background-color: #A499B3; }
+.l-boat { background-color: #18314F; }
+.dinghy { background-color: #820263; }
+.carrier1 { background-color: #F75C03; }
+.carrier2 { background-color: #6DAEDB; }
+.hit { background-color: red; }
+.miss { background-color: white; }
 </style>

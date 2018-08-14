@@ -2,11 +2,12 @@ import _ from "lodash";
 
 const state = {
   board: [],
+  playerBoard: [],
   opponentBoard: [],
   occupied: [],
   sunkShips: [],
   currentShip: {},
-  collisionFlag: true,
+  collisionFlag: false,
   hitCounter: 0,
   missCounter: 0,
   missIndex: 9,
@@ -52,6 +53,8 @@ const state = {
 }
 const getters = {
   getBoard: (state) => state.board,
+  getPlayerBoard: (state) => state.playerBoard,
+  getOpponentBoard: (state) => state.opponentBoard,
   getShips: (state) => state.ships,
   getOccupied: (state) => state.occupied
 }
@@ -205,27 +208,29 @@ function traverseRight(point, end) {
 }
 
 function checkOverlap() {
-  var match = {},
-      matchIndex = -1;
+  var matchIndex = -1,
+      occupiedPoints = [];
 
+  for(var j in state.ships) {
+    if(state.ships[j].index !== state.currentShip.index)
+      occupiedPoints = occupiedPoints.concat(state.ships[j].points);
+  }
+  
   for(var i in state.currentShip.points) {
-    //check if any intended placement spots are already occupied
+    matchIndex = _.findIndex(occupiedPoints, state.currentShip.points[i]);
 
-    matchIndex = _.findIndex(state.occupied, state.currentShip.points[i]);
-    
     if(matchIndex > -1) {
       state.collisionFlag = true;
       state.currentShip.points = [];
     } else {
       state.collisionFlag = false;
-      state.occupied.push(state.currentShip.points[i]);
     }
   }
 
   // only put ships on board if no collisions
   if(!state.collisionFlag)
     shipOnBoard(state.currentShip);
-8}
+}
 
 function shipOnBoard(ship) {
   for(var ind in ship.points) {
