@@ -13,7 +13,7 @@
         :col="cIndex"
         :point="col"
         class="simple-cell"
-        :class="{ 
+        :class="{
           'l-boat' : (col === 1), 
           'dinghy' : (col === 2), 
           'carrier1' : (col === 3), 
@@ -38,28 +38,29 @@ export default {
       rows: ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H']
     }
   },
+  mounted: function() {
+    this.setCurrentBoard('opponent');
+  },
   methods: Object.assign(
     {},
-    mapActions('boards', {})
-  ),
-  computed: Object.assign(
-    {},
-    mapGetters('boards', {
-      opponentBoard: 'getOpponentBoard',
-      ships: 'getShips',
-      occupied: 'getOccupied'
+    mapActions('boards', {
+      setCurrentBoard: 'setCurrentBoard'
     })
-  )
+  ),
+  computed: Object.assign({}, mapGetters('boards', {}))
 }
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-.simple-cell { background-color: #A499B3; }
-.l-boat { background-color: #18314F; }
-.dinghy { background-color: #820263; }
-.carrier1 { background-color: #F75C03; }
-.carrier2 { background-color: #6DAEDB; }
+.simple-cell {
+  background-color: #98B9F2; 
+  cursor: grab;
+}
+.l-boat { background-color: #141B41; }
+.dinghy { background-color: #7A306C; }
+.carrier1 { background-color: #4C2A85; }
+.carrier2 { background-color: #1481BA; }
 .hit { background-color: red; }
 .miss { background-color: white; }
 </style>

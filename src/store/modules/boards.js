@@ -1,23 +1,25 @@
 import _ from "lodash";
 
 const state = {
+  winner: false,
+  winPerson: '',
   board: [],
-  allBoards: [],
   playerBoard: [],
   opponentBoard: [],
   currentBoard: '',
-  sunkShips: [],
+  currentPlayer: '',
   currentShip: {},
   collisionFlag: false,
   hitCounter: 0,
-  missCounter: 0,
-  missIndex: 9,
+  playerSunk: [],
+  opponentSunk: [],
   playerShips: [
     {
       'name': 'L-Ship',
       'index': 1,
       'hitIndex': 5,
       'hitCount': 0,
+      'sunk': false,
       'height': 3,
       'width': 2,
       'points': []
@@ -27,6 +29,7 @@ const state = {
       'index': 2,
       'hitIndex': 6,
       'hitCount': 0,
+      'sunk': false,
       'height': 2,
       'width': 2,
       'points': []
@@ -36,6 +39,7 @@ const state = {
       'index': 3,
       'hitIndex': 7,
       'hitCount': 0,
+      'sunk': false,
       'height': 4,
       'width': 1,
       'points': []
@@ -46,6 +50,7 @@ const state = {
       'hitIndex': 8,
       'hitCount': 0,
       'height': 4,
+      'sunk': false,
       'width': 1,
       'points': []
     }
@@ -56,6 +61,7 @@ const state = {
       'index': 1,
       'hitIndex': 5,
       'hitCount': 0,
+      'sunk': false,
       'height': 3,
       'width': 2,
       'points': []
@@ -65,6 +71,7 @@ const state = {
       'index': 2,
       'hitIndex': 6,
       'hitCount': 0,
+      'sunk': false,
       'height': 2,
       'width': 2,
       'points': []
@@ -74,6 +81,7 @@ const state = {
       'index': 3,
       'hitIndex': 7,
       'hitCount': 0,
+      'sunk': false,
       'height': 4,
       'width': 1,
       'points': []
@@ -84,6 +92,7 @@ const state = {
       'hitIndex': 8,
       'hitCount': 0,
       'height': 4,
+      'sunk': false,
       'width': 1,
       'points': []
     }
@@ -94,6 +103,12 @@ const getters = {
   getBoard: (state) => state.board,
   getPlayerBoard: (state) => state.playerBoard,
   getOpponentBoard: (state) => state.opponentBoard,
+  getCurrentPlayer: (state) => state.currentPlayer,
+  getPlayerSunk: (state) => state.playerSunk,
+  getOpponentSunk: (state) => state.opponentSunk,
+  getWinPerson: (state) => state.winPerson,
+  getLosePerson: (state) => state.losePerson,
+  getWinner: (state) => state.winner
 }
 /* ---------------------- */ 
 /* Initial Ship Placement */ 
@@ -127,6 +142,7 @@ function randomizeArr(arr) {
 function setShips(ships) {
   var shuffleShips = randomizeArr(ships);
   state.board = boardCreate();
+
   for(var i = 0; i < shuffleShips.length; i++) {
     state.currentShip = shuffleShips[i];
     do {
@@ -273,10 +289,7 @@ function checkOverlap() {
 
 function shipOnBoard(ship) {
   for(var ind in ship.points) {
-    // if(state.currentBoard === 'player')
-    //   state.board[ship.points[ind].row][ship.points[ind].col] = ship.index;
-    // else
-      state.board[ship.points[ind].row][ship.points[ind].col] = ship.index;
+    state.board[ship.points[ind].row][ship.points[ind].col] = ship.index;
 
   }
 }
@@ -284,43 +297,53 @@ function shipOnBoard(ship) {
 /*   Attack Opponent   */ 
 /* ------------------- */
 
-function checkHit(coords) {
-  var matchIndex = 0;
-  var hitFlag = false;
-  
-  for(var i in state.ships) {
-    matchIndex = _.findIndex(state.ships[i].points, coords);
-
-    if(matchIndex > -1) {
-      hitFlag = true;
-      hitCondition(state.ships[i], coords); 
-    } else {
-      if(hitFlag === false) {
-        state.missCounter++;
-        if(state.currentBoard === 'player')
-          state.playerBoard[coords.row].splice(coords.col, 1, state.missIndex);
-        else if(state.currentBoard === 'opponent')
-          state.opponentBoard[coords.row].splice(coords.col, 1, state.missIndex);
+function checkPoint(ships, pointInfo) {
+  var missIndex = 9;
+  if(pointInfo.point > 0 && pointInfo.point < 5) {
+    for(var i in ships) {
+      if(ships[i].index === pointInfo.point) {
+        hitCondition(ships[i], pointInfo);
       }
     }
+  } else {
+    if(state.currentBoard === 'player')
+      state.playerBoard[pointInfo.row].splice(pointInfo.col, 1, missIndex);
+    else if(state.currentBoard === 'opponent')
+      state.opponentBoard[pointInfo.row].splice(pointInfo.col, 1, missIndex);
   }
 }
 
-function hitCondition(ship, coords) {
+function hitCondition(ship, pointInfo) {
+  // check if boats have sunk
+  // check if all boats have sunk (win condition)
   var totalHits = 4;
 
   state.hitCounter++;
   ship.hitCount++;
-  //if(state.currentBoard === 'player')
-    state.playerBoard[coords.row].splice(coords.col, 1, 10);
-  // else if(state.currentBoard === 'opponent')
-  //   state.opponentBoard[coords.row].splice(coords.col, 1, 10);
 
   if(ship.hitCount === totalHits) {
-    state.sunkShips.push(ship);
+    if(!ship.sunk) {
+      console.log("You sunk your opponent's " + ship.name);
+      ship.sunk = true;
+    }
   }
-  if(state.sunkShips.length === 4) {
+  // place hit marker on proper board
+  if(state.currentBoard === 'player') {
+    state.playerBoard[pointInfo.row].splice(pointInfo.col, 1, 10);
+    if(ship.sunk) state.playerSunk.push(ship.name);
+
+  } else if(state.currentBoard === 'opponent') {
+    state.opponentBoard[pointInfo.row].splice(pointInfo.col, 1, 10);
+    if(ship.sunk) state.opponentSunk.push(ship.name);
+  }
+
+  if(state.playerSunk.length === 4) {
     //trigger win condition
+    state.winPerson = "Player 2";
+    state.winner = true;
+  } else if (state.opponentSunk.length === 4) {
+    state.winPerson = "Player 1";
+    state.winner = true;
   }
 }
 
@@ -328,10 +351,11 @@ const mutations = {
   setBoard: (state) => {
     state.board = boardCreate();
   },
-  resetBoard: (state) => {
-    Object.assign(state, {
-      board: []
-    });
+  setCurrentPlayer: (state, player) => {
+    state.currentPlayer = player;
+  },
+  setCurrentBoard: (state, boardType) => {
+    state.currentBoard = boardType;
   },
 
   setPlayerBoard: (state) => {
@@ -347,25 +371,130 @@ const mutations = {
     state.opponentBoard = state.board;
   },
 
-  attackOpponent: (state, coords) => {
-    checkHit(coords);
+  attackOpponent: (state, pointInfo) => {
+    if(state.currentBoard === 'player')
+      checkPoint(state.playerShips, pointInfo);
+    else if(state.currentBoard === 'opponent')
+      checkPoint(state.opponentShips, pointInfo);
+  },
+
+  resetState: (state) => {
+    Object.assign(state, {
+      board: [],
+      playerBoard: [],
+      opponentBoard: [],
+      currentBoard: '',
+      currentShip: {},
+      collisionFlag: false,
+      hitCounter: 0,
+      playerShips: [
+        {
+          'name': 'L-Ship',
+          'index': 1,
+          'hitIndex': 5,
+          'hitCount': 0,
+          'sunk': false,
+          'height': 3,
+          'width': 2,
+          'points': []
+        },
+        {
+          'name': 'Dinghy',
+          'index': 2,
+          'hitIndex': 6,
+          'hitCount': 0,
+          'sunk': false,
+          'height': 2,
+          'width': 2,
+          'points': []
+        },
+        {
+          'name': 'Carrier 1',
+          'index': 3,
+          'hitIndex': 7,
+          'hitCount': 0,
+          'sunk': false,
+          'height': 4,
+          'width': 1,
+          'points': []
+        },
+        {
+          'name': 'Carrier 2',
+          'index': 4,
+          'hitIndex': 8,
+          'hitCount': 0,
+          'height': 4,
+          'sunk': false,
+          'width': 1,
+          'points': []
+        }
+      ],
+      opponentShips: [
+        {
+          'name': 'L-Ship',
+          'index': 1,
+          'hitIndex': 5,
+          'hitCount': 0,
+          'sunk': false,
+          'height': 3,
+          'width': 2,
+          'points': []
+        },
+        {
+          'name': 'Dinghy',
+          'index': 2,
+          'hitIndex': 6,
+          'hitCount': 0,
+          'sunk': false,
+          'height': 2,
+          'width': 2,
+          'points': []
+        },
+        {
+          'name': 'Carrier 1',
+          'index': 3,
+          'hitIndex': 7,
+          'hitCount': 0,
+          'sunk': false,
+          'height': 4,
+          'width': 1,
+          'points': []
+        },
+        {
+          'name': 'Carrier 2',
+          'index': 4,
+          'hitIndex': 8,
+          'hitCount': 0,
+          'height': 4,
+          'sunk': false,
+          'width': 1,
+          'points': []
+        }
+      ],
+    });
   }
 }
 const actions = {
   setOpponentBoard: async ({commit}) => {
     commit('setBoard');
     await commit('setPlayerBoard');
-    commit('resetBoard');
     commit('setOpponentBoard');
+  },
+
+  setCurrentPlayer: ({commit}, player) => {
+    commit('setCurrentPlayer', player);
   },
 
   setCurrentBoard: ({commit}, boardType) => {
     commit('setCurrentBoard', boardType);
   },
 
-  attackOpponent: ({commit}, coords) => {
-    console.log(coords);
-    commit('attackOpponent', coords);
+  attackOpponent: ({commit}, pointInfo) => {
+    commit('attackOpponent', pointInfo);
+  },
+
+  resetState: ({commit}) => {
+    commit('resetState');
   }
 }
 

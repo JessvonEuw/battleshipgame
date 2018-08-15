@@ -15,19 +15,23 @@ import { mapGetters, mapActions } from "vuex";
 
 export default {
   mounted () {
-    //this.setOpponentBoard();
+    this.setCurrentBoard('opponent');
+    this.setCurrentPlayer('Player 1');
   },
+
   methods: Object.assign(
     {},
     mapActions('boards', {
-      setOpponentBoard: 'setOpponentBoard'
+      setCurrentBoard: 'setCurrentBoard',
+      setCurrentPlayer: 'setCurrentPlayer'
     })
   ),
   computed: Object.assign(
     {},
     mapGetters('boards', {
       opponentBoard: 'getOpponentBoard',
-      playerBoard: 'getPlayerBoard'
+      playerBoard: 'getPlayerBoard',
+      winner: 'getWinner'
     })
   ) 
 }

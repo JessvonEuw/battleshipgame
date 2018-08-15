@@ -1,11 +1,8 @@
 <template>
   <div class="container">
-    <div class="row board">
-      <opponent-board :board="playerBoard" :currentPlayer="'Player 1'"></opponent-board>
-    </div>
-    <div class="row board">
-      <player-board :board="opponentBoard" :currentPlayer="'Player 2'"></player-board>
-    </div>
+    <router-link to="/">
+      <button @click="resetState" type="button" class="btn btn-dark">{{text}}</button>
+    </router-link>
   </div>
 </template>
 
@@ -14,15 +11,21 @@
 import { mapGetters, mapActions } from "vuex";
 
 export default {
-  mounted () {
-    this.setCurrentBoard('player');
-    this.setCurrentPlayer('Player 2');
+  props: {
+    text: String
   },
+  mounted () {
+    this.setCurrentBoard('opponent');
+  },
+
   methods: Object.assign(
-    {},
+    {
+      resetState: function() {
+        
+      }
+    },
     mapActions('boards', {
-      setCurrentBoard: 'setCurrentBoard',
-      setCurrentPlayer: 'setCurrentPlayer'
+      setCurrentBoard: 'setCurrentBoard'
     })
   ),
   computed: Object.assign(
