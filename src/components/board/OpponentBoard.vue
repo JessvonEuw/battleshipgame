@@ -1,7 +1,27 @@
 <template>
   <div class="container">
-    <h3>Player 2 Board</h3>
-   <board :board="opponentBoard"></board>
+    <h5 class="text-danger">Click your Opponent's Board to Attack!</h5>
+    <h3>{{currentPlayer}} (Your Opponent's) Board</h3>
+    <div class="row justify-content-center align-items-center no-gutters" 
+      :key="rIndex"
+      v-for="(row, rIndex) in board">
+      <div class="col-1"> {{ rows[rIndex] }} </div>
+      <space
+        :key="cIndex"
+        v-for="(col, cIndex) in row"
+        :row="rIndex"
+        :col="cIndex"
+        :point="col"
+        class="simple-cell"
+        :class="{ 
+          'l-boat' : (col === 1), 
+          'dinghy' : (col === 2), 
+          'carrier1' : (col === 3), 
+          'carrier2' : (col === 4),
+          'miss' : (col === 9),
+          'hit' : (col === 10) }">
+      </space>
+    </div>
   </div>
 </template>
 
@@ -9,16 +29,18 @@
 import { mapGetters, mapActions } from "vuex";
 
 export default {
-  mounted () {
-    //this.setBoard();
-    this.setOpponentBoard();
+  props: {
+    board: Array,
+    currentPlayer: String
+  },
+  data () {
+    return {
+      rows: ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H']
+    }
   },
   methods: Object.assign(
     {},
-    mapActions('boards', {
-      setBoard: 'setBoard',
-      setOpponentBoard: 'setOpponentBoard',
-    })
+    mapActions('boards', {})
   ),
   computed: Object.assign(
     {},

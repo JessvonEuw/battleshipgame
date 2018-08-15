@@ -1,10 +1,10 @@
 <template>
   <div class="container">
     <div class="row board">
-      <opponent-board></opponent-board>
+      <opponent-board :board="playerBoard" :currentPlayer="'Player 1'"></opponent-board>
     </div>
     <div class="row board">
-      <player-board></player-board>
+      <player-board :board="opponentBoard" :currentPlayer="'Player 2'"></player-board>
     </div>
   </div>
 </template>
@@ -15,22 +15,19 @@ import { mapGetters, mapActions } from "vuex";
 
 export default {
   mounted () {
-    //this.setBoard();
+    //this.setOpponentBoard();
   },
   methods: Object.assign(
     {},
     mapActions('boards', {
-      //setBoard: 'setBoard',
-      //setPlayerBoard: 'setPlayerBoard',
-      setShips: 'setShips'
+      setOpponentBoard: 'setOpponentBoard'
     })
   ),
   computed: Object.assign(
     {},
     mapGetters('boards', {
-      board: 'getBoard',
-      ships: 'getShips',
-      occupied: 'getOccupied'
+      opponentBoard: 'getOpponentBoard',
+      playerBoard: 'getPlayerBoard'
     })
   ) 
 }
@@ -40,4 +37,3 @@ export default {
   margin-bottom: 5%;
 }
 </style>
-

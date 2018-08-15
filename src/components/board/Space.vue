@@ -2,7 +2,7 @@
   <div class="col" @click="handleFire">
     <p class="cell d-flex justify-content-center align-items-center">
         <i v-if="point === 10" class="fas fa-2x fa-times"></i>
-
+        {{point}}
     </p>
   </div>
 </template>

@@ -1,7 +1,26 @@
 <template>
   <div class="container">
-    <h3>Player 1 Board</h3>
-    <board :board="playerBoard"></board>
+    <h3>{{currentPlayer}} (Your) Board</h3>
+    <div class="row justify-content-center align-items-center no-gutters" 
+      :key="rIndex"
+      v-for="(row, rIndex) in board">
+      <div class="col-1"> {{ rows[rIndex] }} </div>
+      <space
+        :key="cIndex"
+        v-for="(col, cIndex) in row"
+        :row="rIndex"
+        :col="cIndex"
+        :point="col"
+        class="simple-cell"
+        :class="{ 
+          'l-boat' : (col === 1), 
+          'dinghy' : (col === 2), 
+          'carrier1' : (col === 3), 
+          'carrier2' : (col === 4),
+          'miss' : (col === 9),
+          'hit' : (col === 10) }">
+      </space>
+    </div>
   </div>
 </template>
 
@@ -9,32 +28,21 @@
 import { mapGetters, mapActions } from "vuex";
 
 export default {
+  props: {
+    board: Array,
+    currentPlayer: String
+  },
   data () {
     return {
-      //playerBoard: []
+      rows: ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H']
     }
-  },
-  mounted () {
-   // this.setPlayerBoard();
-    //this.setBoard();
-    //this.setShips();
   },
   methods: Object.assign(
     {},
     mapActions('boards', {
-      setBoard: 'setBoard',
-      setPlayerBoard: 'setPlayerBoard',
-      setCurrentBoard: 'setCurrentBoard',
-      //setShips: 'setShips'
     })
   ),
-  computed: Object.assign(
-    {},
-    mapGetters('boards', {
-      playerBoard: 'getPlayerBoard',
-      ships: 'getShips',
-      occupied: 'getOccupied'
-    })
+  computed: Object.assign({}, mapGetters('boards', {})
   )
 }
 </script>

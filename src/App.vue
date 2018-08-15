@@ -2,12 +2,39 @@
   <div id="app">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">  
     <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
+      <router-link to="/">Start</router-link> |
+      <router-link to="/wait1">Transition1</router-link> |
+      <router-link to="/player1">Player1</router-link> |
+      <router-link to="/wait2">Transition2</router-link> |
+      <router-link to="/player2">Player2</router-link> |
+      <router-link to="/end">End</router-link>
     </div>
     <router-view/>
   </div>
 </template>
+<script>
+// @ is an alias to /src
+import { mapGetters, mapActions } from "vuex";
+
+export default {
+  mounted () {
+    this.setOpponentBoard();
+  },
+  methods: Object.assign(
+    {},
+    mapActions('boards', {
+      setOpponentBoard: 'setOpponentBoard'
+    })
+  ),
+  computed: Object.assign(
+    {},
+    mapGetters('boards', {
+      opponentBoard: 'getOpponentBoard',
+      playerBoard: 'getPlayerBoard'
+    })
+  ) 
+}
+</script>
 
 <style>
 #app {
