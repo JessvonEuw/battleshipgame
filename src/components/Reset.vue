@@ -21,11 +21,12 @@ export default {
   methods: Object.assign(
     {
       resetState: function() {
-        
+        this.resetState();
       }
     },
     mapActions('boards', {
-      setCurrentBoard: 'setCurrentBoard'
+      setCurrentBoard: 'setCurrentBoard',
+      resetState: 'resetState'
     })
   ),
   computed: Object.assign(

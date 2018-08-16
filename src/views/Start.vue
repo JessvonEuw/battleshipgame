@@ -12,6 +12,9 @@
 import { mapGetters, mapActions } from "vuex";
 
 export default {
+  mounted () {
+    this.setOpponentBoard();
+  },
   methods: Object.assign(
     {},
     mapActions('boards', {

@@ -1,5 +1,8 @@
 <template>
   <div class="container">
+    <div v-if="sunkShip !== ''" class="alert alert-success" role="alert">
+      You have sunk your opponent's <strong>{{ sunkShip }}</strong>!
+    </div>
     <div class="row board">
       <opponent-board :board="opponentBoard" :currentPlayer="'Player 2'"></opponent-board>
     </div>
@@ -31,7 +34,7 @@ export default {
     mapGetters('boards', {
       opponentBoard: 'getOpponentBoard',
       playerBoard: 'getPlayerBoard',
-      winner: 'getWinner'
+      sunkShip: 'getSunkShip'
     })
   ) 
 }

@@ -13,6 +13,7 @@ const state = {
   hitCounter: 0,
   playerSunk: [],
   opponentSunk: [],
+  sunkShip: "",
   playerShips: [
     {
       'name': 'L-Ship',
@@ -108,7 +109,8 @@ const getters = {
   getOpponentSunk: (state) => state.opponentSunk,
   getWinPerson: (state) => state.winPerson,
   getLosePerson: (state) => state.losePerson,
-  getWinner: (state) => state.winner
+  getWinner: (state) => state.winner,
+  getSunkShip: () => state.sunkShip
 }
 /* ---------------------- */ 
 /* Initial Ship Placement */ 
@@ -139,10 +141,16 @@ function randomizeArr(arr) {
   return arr;
 }
 
-function setShips(ships) {
-  var shuffleShips = randomizeArr(ships);
-  state.board = boardCreate();
+function setShips() {
+  var shuffleShips = [];
 
+  if(state.currentBoard === 'player') {
+    shuffleShips = randomizeArr(state.playerShips);
+    state.playerBoard = boardCreate();
+  } else if(state.currentBoard === 'opponent') {
+    shuffleShips = randomizeArr(state.opponentShips);
+    state.opponentBoard = boardCreate();
+  }
   for(var i = 0; i < shuffleShips.length; i++) {
     state.currentShip = shuffleShips[i];
     do {
@@ -150,7 +158,12 @@ function setShips(ships) {
       shipPlacement(state.currentShip);
     } while(state.collisionFlag);
   }
-  return state.board;
+  if(state.currentBoard === 'player')
+    return state.playerBoard;
+  else if(state.currentBoard === 'opponent')
+    return state.opponentBoard;
+  
+  //return state.board;
 }
 
 function shipPlacement(ship) {
@@ -265,10 +278,18 @@ function checkOverlap() {
   var matchIndex = -1,
       occupiedPoints = [];
 
-  for(var j in state.playerShips) {
-    if(state.playerShips[j].index !== state.currentShip.index)
-      occupiedPoints = occupiedPoints.concat(state.playerShips[j].points);
+  if(state.currentBoard === 'player') {
+    for(var j in state.playerShips) {
+      if(state.playerShips[j].index !== state.currentShip.index)
+        occupiedPoints = occupiedPoints.concat(state.playerShips[j].points);
+    }
+  } else if(state.currentBoard === 'opponent') {
+    for(var m in state.opponentShips) {
+      if(state.opponentShips[m].index !== state.currentShip.index)
+        occupiedPoints = occupiedPoints.concat(state.opponentShips[m].points);
+    }
   }
+
   
   for(var i in state.currentShip.points) {
     matchIndex = _.findIndex(occupiedPoints, state.currentShip.points[i]);
@@ -288,9 +309,14 @@ function checkOverlap() {
 }
 
 function shipOnBoard(ship) {
-  for(var ind in ship.points) {
-    state.board[ship.points[ind].row][ship.points[ind].col] = ship.index;
-
+  if(state.currentBoard === 'player') {
+    for(var ind in ship.points) {
+      state.playerBoard[ship.points[ind].row][ship.points[ind].col] = ship.index;
+    }
+  } else if(state.currentBoard === 'opponent') {
+    for(var k in ship.points) {
+      state.opponentBoard[ship.points[k].row][ship.points[k].col] = ship.index;
+    }
   }
 }
 /* ------------------- */ 
@@ -323,8 +349,11 @@ function hitCondition(ship, pointInfo) {
 
   if(ship.hitCount === totalHits) {
     if(!ship.sunk) {
-      console.log("You sunk your opponent's " + ship.name);
+      state.sunkShip = ship.name;
       ship.sunk = true;
+      setTimeout(() => {
+        state.sunkShip = "";
+      }, 2500);
     }
   }
   // place hit marker on proper board
@@ -359,16 +388,12 @@ const mutations = {
   },
 
   setPlayerBoard: (state) => {
-    setShips(state.playerShips);
-    state.playerBoard = boardCreate();
     state.currentBoard = 'player';
-    state.playerBoard = state.board;
+    setShips(state.playerShips);
   },
   setOpponentBoard: (state) => {
-    setShips(state.opponentShips);
-    state.opponentBoard = boardCreate();
     state.currentBoard = 'opponent';
-    state.opponentBoard = state.board;
+    setShips(state.opponentShips);
   },
 
   attackOpponent: (state, pointInfo) => {
@@ -380,13 +405,19 @@ const mutations = {
 
   resetState: (state) => {
     Object.assign(state, {
+      winner: false,
+      winPerson: '',
       board: [],
-      playerBoard: [],
-      opponentBoard: [],
+      //playerBoard: [],
+      //opponentBoard: [],
       currentBoard: '',
+      currentPlayer: '',
       currentShip: {},
       collisionFlag: false,
       hitCounter: 0,
+      playerSunk: [],
+      opponentSunk: [],
+      sunkShip: "",
       playerShips: [
         {
           'name': 'L-Ship',

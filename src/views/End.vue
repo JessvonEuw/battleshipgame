@@ -1,13 +1,12 @@
 <template>
   <div class="container">
     <h2>{{ winPerson }} Won!</h2>
-    <reset :text="'PLAY AGAIN?'"></reset>
     <div class="row">
-      <div class="col">
-        Player 1 Ships Sunk
+      <div class="col player-title">
+        Player 1 Ships Lost
       </div>
-      <div class="col">
-        Player 2 Ships Sunk
+      <div class="col player-title">
+        Player 2 Ships Lost
       </div>
     </div>
     <div class="row">
@@ -26,6 +25,7 @@
         </div>
       </div>
     </div>
+    <reset :text="'PLAY AGAIN?'"></reset>
   </div>
 </template>
 <script>
@@ -57,5 +57,10 @@ export default {
 <style>
 .board {
   margin-bottom: 5%;
+}
+.player-title {
+  font-size: 18px;
+  font-weight: 700;
+  text-decoration: underline;
 }
 </style>

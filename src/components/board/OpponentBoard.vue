@@ -14,10 +14,6 @@
         :point="col"
         class="simple-cell"
         :class="{
-          'l-boat' : (col === 1), 
-          'dinghy' : (col === 2), 
-          'carrier1' : (col === 3), 
-          'carrier2' : (col === 4),
           'miss' : (col === 9),
           'hit' : (col === 10) }">
       </space>
@@ -57,10 +53,10 @@ export default {
   background-color: #98B9F2; 
   cursor: grab;
 }
-.l-boat { background-color: #141B41; }
+/* .l-boat { background-color: #141B41; }
 .dinghy { background-color: #7A306C; }
 .carrier1 { background-color: #4C2A85; }
-.carrier2 { background-color: #1481BA; }
+.carrier2 { background-color: #1481BA; } */
 .hit { background-color: red; }
 .miss { background-color: white; }
 </style>
