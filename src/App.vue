@@ -26,13 +26,6 @@ export default {
     mapActions('boards', {
       setOpponentBoard: 'setOpponentBoard'
     })
-  ),
-  computed: Object.assign(
-    {},
-    mapGetters('boards', {
-      opponentBoard: 'getOpponentBoard',
-      playerBoard: 'getPlayerBoard'
-    })
   ) 
 }
 </script>

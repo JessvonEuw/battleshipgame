@@ -1,8 +1,11 @@
 <template>
   <div class="container">
-    <h1>Player 2 Prepare for your Play!</h1>
+    <h1>Player 2, it's your turn!</h1>
+    <div>
+      <img src="../assets/radar.jpg" alt="">
+    </div>
     <router-link to="/player2">
-      <button type="button" class="btn btn-dark">Begin Turn</button>
+      <button type="button" class="btn btn-dark btn-lg">BEGIN TURN</button>
     </router-link> 
   </div>
 </template>

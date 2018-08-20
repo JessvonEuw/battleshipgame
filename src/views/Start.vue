@@ -2,9 +2,11 @@
   <div class="container">
     <h1>Welcome to the Wonderful World of BattleShip!</h1>
     <h3>Grab a partner and begin!</h3>
-    <img src="src/assets/ship.jpg" alt="">
+    <div>
+      <img src="../assets/ship.jpg">
+    </div>
     <router-link to="/player1">
-     <button type="button" class="btn btn-dark">Start</button>
+      <button type="button" class="btn btn-dark btn-lg"><strong>START</strong></button>
     </router-link> 
   </div>
 </template>
@@ -20,8 +22,15 @@ export default {
     mapActions('boards', {
       setOpponentBoard: 'setOpponentBoard'
     })
-  ),
-  computed: Object.assign({}, mapGetters('boards', {})
-  ) 
+  )
 }
 </script>
+<style>
+img {
+  width: 40%;
+  height: auto;
+  border-radius: 3%;
+  border: 3px solid black;
+  margin: 5%;
+}
+</style>

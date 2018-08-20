@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <router-link to="/">
-      <button @click="resetState" type="button" class="btn btn-dark">{{text}}</button>
+      <button @click="resetState" type="button" class="btn btn-info btn-lg">{{text}}</button>
     </router-link>
   </div>
 </template>
@@ -14,9 +14,6 @@ export default {
   props: {
     text: String
   },
-  mounted () {
-    this.setCurrentBoard('opponent');
-  },
 
   methods: Object.assign(
     {
@@ -25,17 +22,9 @@ export default {
       }
     },
     mapActions('boards', {
-      setCurrentBoard: 'setCurrentBoard',
       resetState: 'resetState'
     })
-  ),
-  computed: Object.assign(
-    {},
-    mapGetters('boards', {
-      opponentBoard: 'getOpponentBoard',
-      playerBoard: 'getPlayerBoard'
-    })
-  ) 
+  )
 }
 </script>
 <style>

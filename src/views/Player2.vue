@@ -1,13 +1,18 @@
 <template>
   <div class="container">
+    <div class="row justify-content-center">
+      <h5 class="text-danger">Click your Opponent's Board to Attack!</h5>
+    </div>
     <div v-if="sunkShip !== ''" class="alert alert-success" role="alert">
       You have sunk your opponent's <strong>{{ sunkShip }}</strong>!
     </div>
-    <div class="row board">
-      <opponent-board :board="playerBoard" :currentPlayer="'Player 1'"></opponent-board>
-    </div>
-    <div class="row board">
-      <player-board :board="opponentBoard" :currentPlayer="'Player 2'"></player-board>
+    <div class="row">
+      <div class="col-6">
+        <player-board :board="opponentBoard" :currentPlayer="'Player 2'"></player-board>
+      </div>
+      <div class="col-6">
+        <opponent-board :board="playerBoard" :currentPlayer="'Player 1'"></opponent-board>
+      </div>
     </div>
   </div>
 </template>
@@ -19,13 +24,11 @@ import { mapGetters, mapActions } from "vuex";
 export default {
   mounted () {
     this.setCurrentBoard('player');
-    this.setCurrentPlayer('Player 2');
   },
   methods: Object.assign(
     {},
     mapActions('boards', {
       setCurrentBoard: 'setCurrentBoard',
-      setCurrentPlayer: 'setCurrentPlayer'
     })
   ),
   computed: Object.assign(
@@ -39,7 +42,5 @@ export default {
 }
 </script>
 <style>
-.board {
-  margin-bottom: 5%;
-}
+.board { margin-bottom: 5%; }
 </style>

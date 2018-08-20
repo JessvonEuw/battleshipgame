@@ -1,7 +1,8 @@
 <template>
   <div class="container">
-    <h5 class="text-danger">Click your Opponent's Board to Attack!</h5>
-    <h3>{{currentPlayer}} (Your Opponent's) Board</h3>
+    <div class="row justify-content-center">
+      <h3>{{currentPlayer}} (Your Opponent's) Board</h3>
+    </div>
     <div class="row justify-content-center align-items-center no-gutters" 
       :key="rIndex"
       v-for="(row, rIndex) in board">
@@ -33,17 +34,7 @@ export default {
     return {
       rows: ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H']
     }
-  },
-  mounted: function() {
-    this.setCurrentBoard('opponent');
-  },
-  methods: Object.assign(
-    {},
-    mapActions('boards', {
-      setCurrentBoard: 'setCurrentBoard'
-    })
-  ),
-  computed: Object.assign({}, mapGetters('boards', {}))
+  }
 }
 </script>
 
@@ -53,10 +44,6 @@ export default {
   background-color: #98B9F2; 
   cursor: grab;
 }
-/* .l-boat { background-color: #141B41; }
-.dinghy { background-color: #7A306C; }
-.carrier1 { background-color: #4C2A85; }
-.carrier2 { background-color: #1481BA; } */
 .hit { background-color: red; }
 .miss { background-color: white; }
 </style>

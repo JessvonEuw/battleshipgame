@@ -3,11 +3,9 @@ import _ from "lodash";
 const state = {
   winner: false,
   winPerson: '',
-  board: [],
   playerBoard: [],
   opponentBoard: [],
   currentBoard: '',
-  currentPlayer: '',
   currentShip: {},
   collisionFlag: false,
   hitCounter: 0,
@@ -101,14 +99,12 @@ const state = {
   orientation: ['up', 'left', 'right', 'down']
 }
 const getters = {
-  getBoard: (state) => state.board,
   getPlayerBoard: (state) => state.playerBoard,
   getOpponentBoard: (state) => state.opponentBoard,
-  getCurrentPlayer: (state) => state.currentPlayer,
+  getCurrentBoard: (state) => state.currentBoard,
   getPlayerSunk: (state) => state.playerSunk,
   getOpponentSunk: (state) => state.opponentSunk,
   getWinPerson: (state) => state.winPerson,
-  getLosePerson: (state) => state.losePerson,
   getWinner: (state) => state.winner,
   getSunkShip: () => state.sunkShip
 }
@@ -162,8 +158,6 @@ function setShips() {
     return state.playerBoard;
   else if(state.currentBoard === 'opponent')
     return state.opponentBoard;
-  
-  //return state.board;
 }
 
 function shipPlacement(ship) {
@@ -254,7 +248,7 @@ function shipPlacement(ship) {
 
 function traverseUp(point, end) {
   for(var row = point.row - 1; row > end; row--) {
-    // each ship will keep track of its own information
+    // each ship will keep track of its own places on the board
     state.currentShip.points.push({'row': row, 'col': point.col});
   }
 }
@@ -275,6 +269,7 @@ function traverseRight(point, end) {
 }
 
 function checkOverlap() {
+  // check if the current ship is being placed on top of another ship
   var matchIndex = -1,
       occupiedPoints = [];
 
@@ -295,6 +290,7 @@ function checkOverlap() {
     matchIndex = _.findIndex(occupiedPoints, state.currentShip.points[i]);
 
     if(matchIndex > -1) {
+      // there is another ship in the way, try placing again 
       state.collisionFlag = true;
       state.currentShip.points = [];
       break;
@@ -326,12 +322,15 @@ function shipOnBoard(ship) {
 function checkPoint(ships, pointInfo) {
   var missIndex = 9;
   if(pointInfo.point > 0 && pointInfo.point < 5) {
+    // check if point contains a ship
     for(var i in ships) {
       if(ships[i].index === pointInfo.point) {
         hitCondition(ships[i], pointInfo);
       }
     }
   } else {
+    // place a miss marker on the board
+    // splice to automatically update the array
     if(state.currentBoard === 'player')
       state.playerBoard[pointInfo.row].splice(pointInfo.col, 1, missIndex);
     else if(state.currentBoard === 'opponent')
@@ -377,16 +376,9 @@ function hitCondition(ship, pointInfo) {
 }
 
 const mutations = {
-  setBoard: (state) => {
-    state.board = boardCreate();
-  },
-  setCurrentPlayer: (state, player) => {
-    state.currentPlayer = player;
-  },
   setCurrentBoard: (state, boardType) => {
     state.currentBoard = boardType;
   },
-
   setPlayerBoard: (state) => {
     state.currentBoard = 'player';
     setShips(state.playerShips);
@@ -408,10 +400,9 @@ const mutations = {
       winner: false,
       winPerson: '',
       board: [],
-      //playerBoard: [],
-      //opponentBoard: [],
+      playerBoard: [],
+      opponentBoard: [],
       currentBoard: '',
-      currentPlayer: '',
       currentShip: {},
       collisionFlag: false,
       hitCounter: 0,
@@ -507,13 +498,8 @@ const mutations = {
 }
 const actions = {
   setOpponentBoard: async ({commit}) => {
-    commit('setBoard');
     await commit('setPlayerBoard');
     commit('setOpponentBoard');
-  },
-
-  setCurrentPlayer: ({commit}, player) => {
-    commit('setCurrentPlayer', player);
   },
 
   setCurrentBoard: ({commit}, boardType) => {

@@ -5,12 +5,6 @@
           <i v-if="point === 9" class="fas fa-2x fa-times"></i>
       </div>
     </div>
-    <!-- <div v-else class="col">
-      <div class="cell d-flex justify-content-center align-items-center">
-          <i v-if="point === 10" class="fas fa-2x fa-exclamation"></i>
-          <i v-if="point === 9" class="fas fa-2x fa-times"></i>
-      </div>
-    </div> -->
 </template>
 <script>
 import { mapGetters, mapActions } from "vuex";
@@ -22,6 +16,11 @@ import { mapGetters, mapActions } from "vuex";
     point: Number
   },
   mounted () {
+    if(this.$parent.$options._componentTag === 'opponent-board') {
+      this.setCurrentBoard('opponent');
+    } else {
+      this.setCurrentBoard('player');
+    }
   },
   methods: Object.assign(
     {

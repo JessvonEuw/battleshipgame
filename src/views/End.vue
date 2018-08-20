@@ -25,6 +25,9 @@
         </div>
       </div>
     </div>
+    <div>
+      <img src="../assets/ship-end.jpg" alt="">
+    </div>
     <reset :text="'PLAY AGAIN?'"></reset>
   </div>
 </template>
@@ -32,32 +35,18 @@
 import { mapGetters, mapActions } from "vuex";
 
 export default {
-  mounted () {
-    this.setCurrentBoard('opponent');
-    this.setCurrentPlayer('Player 1');
-  },
-
-  methods: Object.assign(
-    {},
-    mapActions('boards', {
-      setCurrentBoard: 'setCurrentBoard',
-      setCurrentPlayer: 'setCurrentPlayer'
-    })
-  ),
   computed: Object.assign(
     {},
     mapGetters('boards', {
       playerSunk: 'getPlayerSunk',
       opponentSunk: 'getOpponentSunk',
-      winPerson: 'getWinPerson',
+      winPerson: 'getWinPerson'
     })
   ) 
 }
 </script>
 <style>
-.board {
-  margin-bottom: 5%;
-}
+.board { margin-bottom: 5%; }
 .player-title {
   font-size: 18px;
   font-weight: 700;

@@ -1,6 +1,8 @@
 <template>
   <div class="container">
-    <h3>{{currentPlayer}} (Your) Board</h3>
+    <div class="row justify-content-center">
+      <h3>{{currentPlayer}} (Your) Board</h3>
+    </div>
     <div class="row justify-content-center align-items-center no-gutters" 
       :key="rIndex"
       v-for="(row, rIndex) in board">
@@ -36,18 +38,7 @@ export default {
     return {
       rows: ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H']
     }
-  },
-  mounted: function() {
-    this.setCurrentBoard('player');
-  },
-  methods: Object.assign(
-    {},
-    mapActions('boards', {
-      setCurrentBoard: 'setCurrentBoard'
-    })
-  ),
-  computed: Object.assign({}, mapGetters('boards', {})
-  )
+  }
 }
 </script>
 
