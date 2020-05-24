@@ -11,42 +11,40 @@
     </div>
     <div class="row">
       <div class="col">
-        <div
-          :key="sIndex"
-          v-for="(pShip, sIndex) in playerSunk">
+        <div :key="sIndex" v-for="(pShip, sIndex) in playerSunk">
           {{ pShip }}
         </div>
       </div>
       <div class="col">
-        <div
-          :key="sIndex"
-          v-for="(oShip, sIndex) in opponentSunk">
+        <div :key="sIndex" v-for="(oShip, sIndex) in opponentSunk">
           {{ oShip }}
         </div>
       </div>
     </div>
     <div>
-      <img src="../assets/ship-end.jpg" alt="">
+      <img src="../assets/ship-end.jpg" alt="" />
     </div>
     <reset :text="'PLAY AGAIN?'"></reset>
   </div>
 </template>
 <script>
-import { mapGetters, mapActions } from "vuex";
+import { mapGetters } from "vuex";
 
 export default {
   computed: Object.assign(
     {},
-    mapGetters('boards', {
-      playerSunk: 'getPlayerSunk',
-      opponentSunk: 'getOpponentSunk',
-      winPerson: 'getWinPerson'
+    mapGetters("boards", {
+      playerSunk: "getPlayerSunk",
+      opponentSunk: "getOpponentSunk",
+      winPerson: "getWinPerson",
     })
-  ) 
-}
+  ),
+};
 </script>
 <style>
-.board { margin-bottom: 5%; }
+.board {
+  margin-bottom: 5%;
+}
 .player-title {
   font-size: 18px;
   font-weight: 700;
