@@ -1,11 +1,6 @@
 <template>
   <div id="app">
-    <link
-      rel="stylesheet"
-      href="https://use.fontawesome.com/releases/v5.2.0/css/all.css"
-      integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ"
-      crossorigin="anonymous"
-    />
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">  
     <div id="nav">
       <reset :text="'RESET'"></reset>
       <!-- <router-link to="/">Start</router-link> |
@@ -15,29 +10,29 @@
       <router-link to="/player2">Player2</router-link> |
       <router-link to="/end">End</router-link> -->
     </div>
-    <router-view />
+    <router-view/>
   </div>
 </template>
 <script>
 // @ is an alias to /src
-import { mapActions } from "vuex";
+import { mapGetters, mapActions } from "vuex";
 
 export default {
-  mounted() {
+  mounted () {
     this.setOpponentBoard();
   },
   methods: Object.assign(
     {},
-    mapActions("boards", {
-      setOpponentBoard: "setOpponentBoard",
+    mapActions('boards', {
+      setOpponentBoard: 'setOpponentBoard'
     })
-  ),
-};
+  ) 
+}
 </script>
 
 <style>
 #app {
-  font-family: "Avenir", Helvetica, Arial, sans-serif;
+  font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
